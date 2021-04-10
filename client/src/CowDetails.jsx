@@ -13,9 +13,9 @@ const CowDetails = ({currentCow}) => {
   } else {
     return (
       <div>
-        <h3>
+        <p>
           {`${currentCow.name.toUpperCase()} :  ${currentCow.description}`}
-        </h3>
+        </p>
       </div>
     )
   }

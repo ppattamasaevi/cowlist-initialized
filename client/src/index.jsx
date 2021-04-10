@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import axios from 'axios';
 
 import CowNamesList from './CowNamesList.jsx';
 import CowDetails from './CowDetails.jsx';
@@ -10,7 +11,7 @@ class App extends React.Component {
     super(props)
 
     this.state = {
-      cows: [{name: 'Buttercup', description: 'A buttery cow.'}, {name: 'Daisy', description: 'A flowery cow.'}],
+      cows: [],
       currentCow: null
     }
   }
@@ -21,13 +22,22 @@ class App extends React.Component {
     });
   }
 
-  handleCowSubmit(cow) {
-    let newCows = this.state.cows.slice();
-    newCows.push(cow);
+  componentDidMount() {
+    this.getAllCows();
+  }
 
-    this.setState({
-      cows: newCows
-    });
+  getAllCows() {
+    axios.get('/cows')
+      .then(({data}) => {
+        console.log('data from db', data);
+        this.setState({
+          cows: data[0]
+        });
+      })
+  }
+
+  handleCowSubmit() {
+    this.getAllCows();
   }
 
   render() {
