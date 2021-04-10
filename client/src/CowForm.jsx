@@ -1,4 +1,5 @@
 import React from "react";
+import axios from 'axios';
 
 /*
 USER STORY:
@@ -30,24 +31,40 @@ class CowForm extends React.Component {
     }
   }
 
-  buildNewCow(event) {
+  saveNewCow(event) {
     event.preventDefault();
-    let newCow = {};
-    newCow.name = this.state.cowName;
-    newCow.description = this.state.cowDescription;
-    this.props.handleCowSubmit(newCow);
+    const name = this.state.cowName;
+    const description = this.state.cowDescription;
+
+    const params = [name, description]
+    axios.post('/cows', params)
+      .then(() => {
+        this.props.handleCowSubmit()
+      })
+      .catch((err) => {
+        console.log('Error from server while saving new cow', err);
+      });
+
+
+
+    const allInputs = document.getElementsByClassName("inputs");
+
+    for (let i = 0; i < allInputs.length; i++) {
+      allInputs[i].value = '';
+    }
   }
 
   render() {
     return (
       <div>
         <form>
-          <h4>Create your own cow:</h4>
+          <h4>Add a new cow:</h4>
           <p>
             <input
               onChange={() => {
                 this.handleFormChange(event)
               }}
+              className="inputs"
               type="text"
               name="name"
               placeholder="Name for your new cow"
@@ -58,12 +75,13 @@ class CowForm extends React.Component {
               onChange={() => {
                 this.handleFormChange(event)
               }}
+              className="inputs"
               type="text"
               name="description"
               placeholder="Description of your new cow"
             ></input>
           </p>
-          <p><button onClick={()=>{this.buildNewCow(event)}}>Submit New Cow</button></p>
+          <p><button onClick={()=>{this.saveNewCow(event)}}>Save a Cow</button></p>
         </form>
       </div>
     )
